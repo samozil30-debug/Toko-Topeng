@@ -5149,3 +5149,148 @@ img {
     padding-top: 130px;
   }
 }
+
+
+/* =================================
+   DETAIL PRODUK
+================================= */
+
+.detail-page {
+  padding-top: 70px;
+  padding-bottom: 70px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #80502f;
+  text-decoration: none;
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+.detail-product {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 45px;
+  align-items: center;
+  background: #fff;
+  padding: 30px;
+  border-radius: 18px;
+  border: 1px solid #eee5da;
+}
+
+.detail-product-image {
+  width: 100%;
+  height: 430px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #f5eee5;
+}
+
+.detail-product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-product-info .eyebrow {
+  color: #a16b3f;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.detail-product-info h1 {
+  color: #4b3525;
+  font-size: 34px;
+  margin: 15px 0;
+}
+
+.detail-product-info h2 {
+  color: #a35e2e;
+  font-size: 26px;
+  margin-bottom: 20px;
+}
+
+.detail-product-info p {
+  color: #76685c;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+.detail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.buy-now-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 13px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #4b3525;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.buy-now-button:hover {
+  background: #69482e;
+  transform: translateY(-2px);
+}
+
+.product-name-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-name-link:hover {
+  color: #a35e2e;
+}
+
+@media (max-width: 768px) {
+  .detail-page {
+    padding-top: 125px;
+  }
+
+  .detail-product {
+    grid-template-columns: 1fr;
+    padding: 18px;
+    gap: 25px;
+  }
+
+  .detail-product-image {
+    height: 300px;
+  }
+
+  .detail-product-info h1 {
+    font-size: 27px;
+  }
+
+  .detail-actions {
+    flex-direction: column;
+  }
+
+  .detail-actions button {
+    width: 100%;
+  }
+}
+
+/* Jarak bagian atas halaman Checkout */
+.checkout-page {
+  padding-top: 110px;
+  padding-bottom: 60px;
+}
+
+@media (max-width: 768px) {
+  .checkout-page {
+    padding-top: 130px;
+  }
+}

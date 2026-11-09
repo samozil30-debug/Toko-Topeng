@@ -163,14 +163,6 @@ export default function Checkout({ buatPesanan }) {
 
   return (
     <div className="checkout-page">
-      <div className="page-heading checkout-heading">
-        <span className="checkout-eyebrow">SELESAIKAN PESANAN</span>
-        <h1>Checkout</h1>
-        <p>
-          Lengkapi informasi pengiriman dan lakukan pembayaran
-          untuk pesananmu.
-        </p>
-      </div>
 
       <form
         className="checkout-layout"

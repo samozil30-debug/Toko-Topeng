@@ -8,12 +8,12 @@ import {
   useLocation,
 } from "react-router-dom";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // Import komponen
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
-import Produk from "./pages/Produk";
+import Produk, { DetailProduk } from "./pages/Produk";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Keranjang from "./pages/Keranjang";
@@ -46,27 +46,23 @@ function ProtectedRoute({ children }) {
 function AppContent() {
   const navigate = useNavigate();
 
-  // State keranjang
+  // STATE KERANJANG
   const [keranjang, setKeranjang] = useState(() => {
     return JSON.parse(localStorage.getItem("keranjang")) || [];
   });
 
-  // State pesanan
+  // STATE PESANAN
   const [pesanan, setPesanan] = useState(() => {
     return JSON.parse(localStorage.getItem("pesanan")) || [];
   });
 
-  // ===============================
   // SIMPAN KERANJANG
-  // ===============================
   const simpanKeranjang = (data) => {
     setKeranjang(data);
     localStorage.setItem("keranjang", JSON.stringify(data));
   };
 
-  // ===============================
-  // TAMBAH PRODUK KE KERANJANG
-  // ===============================
+  // TAMBAH KE KERANJANG
   const tambahKeranjang = (produk) => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
 
@@ -105,11 +101,40 @@ function AppContent() {
     }
 
     simpanKeranjang(keranjangBaru);
+
+    alert(`${produk.nama} berhasil ditambahkan ke keranjang!`);
   };
 
-  // ===============================
+  // BELI SEKARANG
+  const beliSekarang = (produk) => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+    if (!isLoggedIn) {
+      alert("Silakan login terlebih dahulu!");
+
+      sessionStorage.setItem(
+        "redirectAfterLogin",
+        "/"
+      );
+
+      navigate("/login");
+      return;
+    }
+
+    navigate("/checkout", {
+      state: {
+        produkDipilih: [
+          {
+            ...produk,
+            jumlah: 1,
+          },
+        ],
+        modePembelian: "langsung",
+      },
+    });
+  };
+
   // UBAH JUMLAH PRODUK
-  // ===============================
   const ubahJumlah = (id, perubahan) => {
     const keranjangBaru = keranjang
       .map((item) =>
@@ -125,9 +150,7 @@ function AppContent() {
     simpanKeranjang(keranjangBaru);
   };
 
-  // ===============================
-  // HAPUS PRODUK DARI KERANJANG
-  // ===============================
+  // HAPUS PRODUK
   const hapusProduk = (id) => {
     const keranjangBaru = keranjang.filter(
       (item) => item.id !== id
@@ -136,9 +159,7 @@ function AppContent() {
     simpanKeranjang(keranjangBaru);
   };
 
-  // ===============================
   // BUAT PESANAN
-  // ===============================
   const buatPesanan = (data, idProdukDibeli = []) => {
     const pesananBaru = {
       id: Date.now(),
@@ -146,7 +167,6 @@ function AppContent() {
       tanggal: data.tanggal || new Date().toISOString(),
     };
 
-    // Simpan pesanan
     const pesananTerbaru = [
       pesananBaru,
       ...pesanan,
@@ -159,7 +179,7 @@ function AppContent() {
       JSON.stringify(pesananTerbaru)
     );
 
-    // Hapus hanya produk yang dibeli
+    // Hapus produk yang dibeli dari keranjang
     if (idProdukDibeli.length > 0) {
       const keranjangTersisa = keranjang.filter(
         (item) => !idProdukDibeli.includes(item.id)
@@ -171,9 +191,7 @@ function AppContent() {
     return pesananBaru;
   };
 
-  // ===============================
   // LOGOUT
-  // ===============================
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
@@ -181,9 +199,7 @@ function AppContent() {
     navigate("/login");
   };
 
-  // ===============================
   // ROUTES
-  // ===============================
   return (
     <>
       <Navbar
@@ -195,18 +211,29 @@ function AppContent() {
       />
 
       <Routes>
-        {/* HALAMAN UTAMA */}
+        {/* DASHBOARD */}
         <Route
           path="/"
           element={<Dashboard />}
         />
 
-        {/* PRODUK */}
+        {/* SEMUA PRODUK */}
         <Route
           path="/produk"
           element={
             <Produk
               tambahKeranjang={tambahKeranjang}
+            />
+          }
+        />
+
+        {/* DETAIL PRODUK */}
+        <Route
+          path="/detail/:id"
+          element={
+            <DetailProduk
+              tambahKeranjang={tambahKeranjang}
+              beliSekarang={beliSekarang}
             />
           }
         />

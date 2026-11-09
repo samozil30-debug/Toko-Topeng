@@ -1,5 +1,6 @@
 
 import React from "react";
+
 import {
   Link,
   useParams,
@@ -8,6 +9,7 @@ import {
 
 import {
   ShoppingCart,
+  ShoppingBag,
   ArrowLeft,
   Search,
 } from "lucide-react";
@@ -112,13 +114,15 @@ export default function Produk({ tambahKeranjang }) {
   const cari = searchParams.get("cari") || "";
 
   const hasil = daftarProduk.filter((item) =>
-    item.nama.toLowerCase().includes(cari.toLowerCase().trim())
+    item.nama
+      .toLowerCase()
+      .includes(cari.toLowerCase().trim())
   );
 
   return (
     <main className="page-container products-page">
 
-      {/* INFORMASI HASIL PENCARIAN */}
+      {/* HASIL PENCARIAN */}
       {cari && (
         <div className="product-search-result">
           <p>
@@ -136,7 +140,10 @@ export default function Produk({ tambahKeranjang }) {
       {hasil.length > 0 && (
         <div className="product-grid">
           {hasil.map((item) => (
-            <div className="product-card" key={item.id}>
+            <div
+              className="product-card"
+              key={item.id}
+            >
 
               {/* FOTO PRODUK */}
               <Link
@@ -151,7 +158,13 @@ export default function Produk({ tambahKeranjang }) {
 
               {/* INFORMASI PRODUK */}
               <div className="product-info">
-                <h3>{item.nama}</h3>
+
+                <Link
+                  to={`/detail/${item.id}`}
+                  className="product-name-link"
+                >
+                  <h3>{item.nama}</h3>
+                </Link>
 
                 <p>{item.deskripsi}</p>
 
@@ -169,13 +182,13 @@ export default function Produk({ tambahKeranjang }) {
                   </button>
                 </div>
 
-                {/* TOMBOL DETAIL */}
                 <Link
                   className="detail-link"
                   to={`/detail/${item.id}`}
                 >
                   Lihat Detail
                 </Link>
+
               </div>
             </div>
           ))}
@@ -210,42 +223,58 @@ export default function Produk({ tambahKeranjang }) {
 // HALAMAN DETAIL PRODUK
 // ======================================
 
-export function DetailProduk({ tambahKeranjang }) {
+export function DetailProduk({
+  tambahKeranjang,
+  beliSekarang,
+}) {
   const { id } = useParams();
 
   const produk = daftarProduk.find(
     (item) => item.id === Number(id)
   );
 
+  // JIKA PRODUK TIDAK DITEMUKAN
   if (!produk) {
     return (
-      <div className="empty-state">
-        <h2>Produk Tidak Ditemukan</h2>
+      <main className="page-container">
+        <div className="empty-state">
+          <h2>Produk Tidak Ditemukan</h2>
 
-        <Link to="/produk" className="primary-button">
-          Kembali ke Produk
-        </Link>
-      </div>
+          <Link
+            to="/produk"
+            className="primary-button"
+          >
+            Kembali ke Produk
+          </Link>
+        </div>
+      </main>
     );
   }
 
   return (
-    <main className="page-container">
+    <main className="page-container detail-page">
 
-      {/* KEMBALI */}
-      <Link to="/produk" className="back-link">
+      {/* TOMBOL KEMBALI */}
+      <Link
+        to="/produk"
+        className="back-link"
+      >
         <ArrowLeft size={17} />
         Kembali ke Produk
       </Link>
 
       {/* DETAIL PRODUK */}
       <div className="detail-product">
-        <img
-          src={produk.gambar}
-          alt={produk.nama}
-        />
 
-        <div>
+        <div className="detail-product-image">
+          <img
+            src={produk.gambar}
+            alt={produk.nama}
+          />
+        </div>
+
+        <div className="detail-product-info">
+
           <span className="eyebrow">
             KOLEKSI TOPENG MALANGAN
           </span>
@@ -256,14 +285,29 @@ export function DetailProduk({ tambahKeranjang }) {
 
           <p>{produk.deskripsi}</p>
 
-          <button
-            type="button"
-            className="primary-button"
-            onClick={() => tambahKeranjang(produk)}
-          >
-            <ShoppingCart size={18} />
-            Tambah ke Keranjang
-          </button>
+          <div className="detail-actions">
+
+            {/* TAMBAH KERANJANG */}
+            <button
+              type="button"
+              className="primary-button"
+              onClick={() => tambahKeranjang(produk)}
+            >
+              <ShoppingCart size={18} />
+              Tambah ke Keranjang
+            </button>
+
+            {/* BELI SEKARANG */}
+            <button
+              type="button"
+              className="buy-now-button"
+              onClick={() => beliSekarang(produk)}
+            >
+              <ShoppingBag size={18} />
+              Beli Sekarang
+            </button>
+
+          </div>
         </div>
       </div>
     </main>
